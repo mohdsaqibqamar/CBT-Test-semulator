@@ -1,0 +1,62 @@
+{
+    "overall": {
+        "score": 0,
+        "correct": 0,
+        "incorrect": 0,
+        "skipped": 8,
+        "total_questions": 8
+    },
+    "breakdown": {
+        "Physics": {
+            "score": 0,
+            "correct": 0,
+            "incorrect": 0,
+            "skipped": 8,
+            "total": 8
+        }
+    },
+    "answers": {
+        "1": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        },
+        "2": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        },
+        "3": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        },
+        "4": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        },
+        "5": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        },
+        "6": {
+            "user_answer": null,
+            "correct_answer": "4",
+            "status": "skipped"
+        },
+        "7": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        },
+        "8": {
+            "user_answer": null,
+            "correct_answer": "1",
+            "status": "skipped"
+        }
+    },
+    "time_taken": 49,
+    "timestamp": "2026-05-27 02:31 PM"
+}

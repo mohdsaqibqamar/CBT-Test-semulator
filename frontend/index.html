@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEET/JEE CBT Simulator</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Glassmorphic Stylesheet -->
+    <link rel="stylesheet" href="css/style.css?v=22">
+</head>
+<body class="dark-theme">
+    
+    <!-- Top Premium Navigation Bar -->
+    <header class="main-header glass">
+        <div class="logo-area">
+            <div class="logo-icon"></div>
+            <h1>NEET/JEE <span>CBT Simulator</span></h1>
+        </div>
+        <div class="header-actions">
+            <span id="header-timer" class="header-timer hidden">00:00:00</span>
+            <button id="btn-dashboard" class="btn btn-secondary"><i class="icon-home"></i> Dashboard</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        
+        <!-- ============================================== -->
+        <!-- VIEW 1: DASHBOARD VIEW                         -->
+        <!-- ============================================== -->
+        <section id="view-dashboard" class="view active">
+            <div class="hero-section">
+                <h2>Practice like a topper with actual CBT exam simulator.</h2>
+                <p>Upload standard question paper PDFs, visually slice questions, parse answer keys, and take simulated NEET/JEE mock tests offline with deep analytics.</p>
+                
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
+                    <button id="btn-import-test" class="btn btn-secondary btn-lg desktop-only hidden">
+                        <span class="btn-icon">↓</span> Import Shared Test (.cbttest)
+                    </button>
+                    <button id="btn-create-test" class="btn btn-primary btn-lg">
+                        <span class="btn-icon">+</span> Create New Test From PDF
+                    </button>
+                </div>
+            </div>
+
+            <div class="test-list-container">
+                <h3 class="section-title">Your Question Banks & Mock Tests</h3>
+                <div id="test-grid" class="test-grid">
+                    <!-- Loaded tests will be generated here -->
+                    <div class="no-tests glass">
+                        <div class="illustration">📂</div>
+                        <p>No tests created yet. Upload a PDF to create your first question bank!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 1.5: TEST PROFILE / ATTEMPT HISTORY       -->
+        <!-- ============================================== -->
+        <section id="view-test-profile" class="view">
+            <div class="hero-section" style="padding-bottom: 2rem;">
+                <h2 id="profile-test-title">Mock Test Profile</h2>
+                <p>View your past attempts and analytics for this specific question bank.</p>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem; align-items: center;">
+                    <button id="btn-profile-back" class="btn btn-secondary">⬅ Back to Dashboard</button>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; background: var(--bg-dark); padding: 0.5rem 1rem; border-radius: var(--radius-sm);">
+                        <label for="input-timer-mins" style="color: var(--text-muted); font-size: 0.9rem;">Timer (Mins):</label>
+                        <input type="number" id="input-timer-mins" value="180" style="width: 70px; background: transparent; border: 1px solid var(--border-color); color: white; padding: 0.3rem; border-radius: 4px;">
+                    </div>
+                    <button id="btn-profile-start" class="btn btn-primary">Start New Attempt 🚀</button>
+                </div>
+            </div>
+
+            <div class="test-list-container">
+                <h3 class="section-title">Attempt History & Analytics</h3>
+                <div id="attempts-grid" class="test-grid">
+                    <!-- Attempts cards go here -->
+                    <div class="no-tests glass">
+                        <div class="illustration">📊</div>
+                        <p>No attempts recorded yet. Start a new mock test!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: PDF CROP / SLICER VIEW                 -->
+        <!-- ============================================== -->
+        <section id="view-slicer" class="view">
+            <div class="slicer-layout">
+                <!-- Slicer Controls Sidebar -->
+                <div class="slicer-sidebar glass">
+                    <h3 class="panel-title">Question Slicer</h3>
+                    <div class="test-info-inputs">
+                        <label>Test Title</label>
+                        <input type="text" id="slicer-test-title" placeholder="e.g. NEET 2025 Full Syllabus Mock 1">
+                        
+                        <label style="margin-top: 10px; display: block;">Default Timer (Mins)</label>
+                        <input type="number" id="slicer-test-timer" value="180" style="margin-bottom: 15px; width: 100%; background: var(--bg-dark); border: 1px solid var(--border-color); color: white; padding: 0.5rem; border-radius: var(--radius-sm);">
+                        
+                        <div class="subject-range-config">
+                            <label>Subject Ranges (Questions)</label>
+                            <div class="range-row">
+                                <span class="badge physics">Physics</span>
+                                <input type="number" id="range-phy-start" value="1"> to <input type="number" id="range-phy-end" value="45">
+                            </div>
+                            <div class="range-row">
+                                <span class="badge chemistry">Chemistry</span>
+                                <input type="number" id="range-chem-start" value="46"> to <input type="number" id="range-chem-end" value="90">
+                            </div>
+                            <div class="range-row">
+                                <span class="badge biology">Biology</span>
+                                <input type="number" id="range-bio-start" value="91"> to <input type="number" id="range-bio-end" value="180">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="active-crop-controls">
+                        <div class="crop-header">
+                            <span>Active Crop Setup</span>
+                            <span id="active-q-number" class="badge">Q1</span>
+                        </div>
+                        <div class="crop-details">
+                            <div class="subject-selector">
+                                <span class="label">Auto-Detected Subject:</span>
+                                <span id="active-q-subject" class="badge physics">Physics</span>
+                            </div>
+                            <div class="instruction-note">
+                                💡 Click & drag a rectangle on the PDF page showing both the question text, diagrams, and options.
+                            </div>
+                        </div>
+                        <button id="btn-save-crop" class="btn btn-primary w-full hidden" disabled>Save Question Crop (Enter)</button>
+                        <button id="btn-select-current" class="btn btn-secondary w-full" style="margin-top: 0.5rem; background: var(--bg-dark); border-color: var(--accent-purple);">📄 Select Current Page</button>
+                        <button id="btn-select-all" class="btn btn-secondary w-full" style="margin-top: 0.5rem; background: var(--bg-dark); border-color: var(--accent-purple);">📑 Select All Pages</button>
+                    </div>
+
+                    <div class="crops-list-wrapper">
+                        <h4>Cropped Questions (<span id="total-crops-count">0</span>)</h4>
+                        <div id="crops-list" class="crops-list">
+                            <!-- Question cards go here -->
+                        </div>
+                    </div>
+
+                    <button id="btn-slicer-done" class="btn btn-success btn-lg w-full mt-auto">Finish Cropping & Next</button>
+                </div>
+
+                <!-- PDF View Canvas Area -->
+                <div class="slicer-canvas-area glass">
+                    <div class="canvas-header">
+                        <div class="page-controls">
+                            <button id="btn-prev-page" class="btn btn-icon btn-secondary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6"></polyline>
+                                </svg>
+                            </button>
+                            <span class="page-indicator">Page <span id="current-page-num">1</span> of <span id="total-pages-num">1</span></span>
+                            <button id="btn-next-page" class="btn btn-icon btn-secondary">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </button>
+                            <button id="btn-delete-page" class="btn btn-icon btn-secondary" style="margin-left: 10px; padding: 6px;" title="Delete this page">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="zoom-controls">
+                            <button id="btn-zoom-out" class="btn btn-icon btn-secondary">-</button>
+                            <span id="zoom-value">100%</span>
+                            <button id="btn-zoom-in" class="btn btn-icon btn-secondary">+</button>
+                        </div>
+                    </div>
+
+                    <div class="canvas-scroll-container">
+                        <div id="crop-canvas-container" class="crop-canvas-container">
+                            <img id="pdf-page-image" src="" alt="PDF page loading...">
+                            
+                            <!-- Auto Crops Container -->
+                            <div id="auto-crops-container"></div>
+                            
+                            <div id="crop-selection-box" class="crop-selection-box hidden">
+                                <div class="crop-label">Q1</div>
+                                <div class="resize-handle nw"></div>
+                                <div class="resize-handle ne"></div>
+                                <div class="resize-handle sw"></div>
+                                <div class="resize-handle se"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 3: ANSWER KEY & START TEST DETAILS VIEW   -->
+        <!-- ============================================== -->
+        <section id="view-test-details" class="view">
+            <div class="details-layout glass">
+                <h2 id="details-test-title" class="test-title">Mock Test Overview</h2>
+                
+                <div class="details-grid">
+                    <!-- Left: Metadata Summary -->
+                    <div class="details-summary-panel">
+                        <h3>Test Structure</h3>
+                        <div class="meta-card">
+                            <div class="meta-item">
+                                <span class="label">Total Slices Saved</span>
+                                <span id="meta-total-questions" class="val">0 Questions</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="label">Physics Range</span>
+                                <span id="meta-phy-range" class="val">Q1 - Q50</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="label">Chemistry Range</span>
+                                <span id="meta-chem-range" class="val">Q51 - Q100</span>
+                            </div>
+                            <div class="meta-item">
+                                <span class="label">Biology Range</span>
+                                <span id="meta-bio-range" class="val">Q101 - Q180</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rules-card">
+                            <h4>NEET Marking Rules:</h4>
+                            <ul>
+                                <li>🟢 <strong>+4 Marks</strong> for every correct answer</li>
+                                <li>🔴 <strong>-1 Mark</strong> for every incorrect answer</li>
+                                <li>⚪ <strong>0 Marks</strong> for unanswered/skipped questions</li>
+                                <li>⏱️ <strong id="profile-rules-timer">180 Minutes</strong> total test duration</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Answer Sheet Config -->
+                    <div class="details-answer-panel">
+                        <h3>Answer Key Setup</h3>
+                        <p class="subtitle">Paste or type the correct answers. We support standard formats automatically.</p>
+                        
+                        <div class="textarea-container">
+                            <textarea id="answer-key-input" placeholder="Example format:&#10;1. (3) 2. (1) 3. (4)&#10;OR&#10;1. 3, 2. 1, 3. 4&#10;OR&#10;1-C, 2-A, 3-D"></textarea>
+                            <button id="btn-parse-answers" class="btn btn-secondary">Parse & Load Answer Table</button>
+                        </div>
+
+                        <div class="parsed-answers-section">
+                            <h4>Answer Preview Table</h4>
+                            <div class="table-scroll">
+                                <table class="answer-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Q. No.</th>
+                                            <th>Subject</th>
+                                            <th>Correct Answer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="parsed-answers-body">
+                                        <!-- Will be generated -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-actions">
+                    <button id="btn-back-slicer" class="btn btn-secondary">Back to Slicer</button>
+                    <button id="btn-start-exam" class="btn btn-success btn-lg">🚀 Start NEET CBT Mock Exam</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 4: NTA STYLE CBT EXAM PANEL               -->
+        <!-- ============================================== -->
+        <section id="view-exam" class="view">
+            <div class="exam-layout">
+                <!-- Left Panel: High Fidelity Question Viewer -->
+                <div class="exam-question-panel glass">
+                    <div class="panel-header">
+                        <span class="subject-badge" id="exam-current-subject">Physics</span>
+                        <span class="q-label">Question <span id="exam-q-number">1</span></span>
+                        <div class="exam-zoom">
+                            <button id="btn-exam-zoom-out" class="btn btn-icon btn-secondary">-</button>
+                            <button id="btn-exam-zoom-reset" class="btn btn-secondary">Reset Zoom</button>
+                            <button id="btn-exam-zoom-in" class="btn btn-icon btn-secondary">+</button>
+                        </div>
+                    </div>
+                    <div class="exam-scroll-container">
+                        <div id="exam-image-wrapper" class="exam-image-wrapper">
+                            <img id="exam-question-image" src="" alt="Cropped question displays here">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Navigation and Option Selector -->
+                <div class="exam-control-panel glass">
+                    <div class="timer-card">
+                        <div class="timer-label">Time Remaining:</div>
+                        <div id="exam-timer" class="timer-countdown">03:20:00</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <button id="btn-submit-exam" class="btn btn-danger w-full btn-lg">🛑 Submit Exam</button>
+                    </div>
+
+                    <!-- Subject Quick Filter Tabs -->
+                    <div class="subject-tabs">
+                        <button class="sub-tab active" data-subject="Physics">Physics</button>
+                        <button class="sub-tab" data-subject="Chemistry">Chemistry</button>
+                        <button class="sub-tab" data-subject="Biology">Biology</button>
+                    </div>
+
+                    <!-- Options Selector -->
+                    <div class="options-container" id="exam-options-container">
+                        <!-- Dynamically populated by exam.js -->
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="actions-grid">
+                        <button id="btn-save-next" class="btn btn-success">Save & Next</button>
+                        <button id="btn-clear-response" class="btn btn-secondary">Clear Response</button>
+                        <button id="btn-mark-review" class="btn btn-warning">Mark for Review & Next</button>
+                    </div>
+
+                    <!-- Navigation Palette Grid -->
+                    <div class="palette-container">
+                        <div class="palette-header">
+                            <span>Question Grid</span>
+                            <span class="progress-details"><span id="exam-answered-count">0</span> / <span id="exam-total-count">0</span> Answered</span>
+                        </div>
+                        <div id="exam-palette" class="exam-palette">
+                            <!-- Question circles go here -->
+                        </div>
+                    </div>
+
+                    <div class="exam-footer">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================== -->
+        <!-- VIEW 5: SCORECARD / DETAILED ANALYTICS VIEW    -->
+        <!-- ============================================== -->
+        <section id="view-scorecard" class="view">
+            <div class="scorecard-container glass">
+                <div class="scorecard-header">
+                    <h2>Mock Test Results & Analytics</h2>
+                    <div id="scorecard-test-title" class="scorecard-test-title">NEET Mock Test Syllabus 1</div>
+                </div>
+
+                <!-- Post-Exam Question Review Panel (MOVED TO TOP) -->
+                <div class="review-section">
+                    <div class="review-header">
+                        <h3>Detailed Question Review</h3>
+                        <div class="filter-buttons">
+                            <button class="btn btn-secondary active" data-filter="all">All Questions</button>
+                            <button class="btn btn-secondary" data-filter="incorrect">Incorrect Only</button>
+                            <button class="btn btn-secondary" data-filter="skipped">Skipped Only</button>
+                        </div>
+                    </div>
+
+                    <div class="review-layout">
+                        <!-- Left list of questions with status badges -->
+                        <div class="review-list-sidebar">
+                            <div id="review-question-list" class="review-question-list">
+                                <!-- Generated list of clickable cards -->
+                            </div>
+                        </div>
+                        <!-- Right preview of selected wrong question -->
+                        <div class="review-question-display">
+                            <div class="display-header" style="display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <span class="q-label">Question <span id="review-display-num">1</span></span>
+                                    <span id="review-display-status" class="badge success">Correct</span>
+                                </div>
+                                <div class="exam-zoom">
+                                    <button id="btn-review-zoom-out" class="btn btn-icon btn-secondary">-</button>
+                                    <button id="btn-review-zoom-reset" class="btn btn-secondary">50%</button>
+                                    <button id="btn-review-zoom-in" class="btn btn-icon btn-secondary">+</button>
+                                </div>
+                            </div>
+                            <div class="review-display-body">
+                                <img id="review-display-image" src="" alt="Cropped question displays here">
+                            </div>
+                            <div class="review-display-answers">
+                                <div class="ans-block user-ans">
+                                    <span class="lbl">Your Marked Answer:</span>
+                                    <span id="review-user-ans" class="val badge">A</span>
+                                </div>
+                                <div class="ans-block correct-ans">
+                                    <span class="lbl">Correct Answer:</span>
+                                    <span id="review-correct-ans" class="val badge success">C</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update Answer Key Panel -->
+                <div class="review-section" style="margin-bottom: 2rem; background: var(--bg-dark); padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+                    <h3 style="margin-bottom: 0.5rem; color: var(--text-light);">Update Answer Key</h3>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem;">If you took the test without an answer key, paste it here to evaluate your score.</p>
+                    <div class="textarea-container" style="display: flex; gap: 1rem; align-items: stretch;">
+                        <textarea id="scorecard-answer-input" placeholder="e.g. 1.2, 2.1, 3.4..." style="flex-grow: 1; height: 60px; background: transparent; border: 1px solid var(--border-glass); border-radius: var(--radius-sm); color: white; padding: 0.5rem; resize: none;"></textarea>
+                        <button id="btn-scorecard-reevaluate" class="btn btn-secondary">Update & Re-evaluate Result</button>
+                    </div>
+                </div>
+
+                <!-- Dashboard Summary Cards (MOVED TO BOTTOM) -->
+                <div class="summary-cards">
+                    <div class="card score-card">
+                        <span class="title">Total Score</span>
+                        <div class="value"><span id="score-total">0</span><span class="max">/ 720</span></div>
+                        <span class="subtitle">NEET Scoring Metric</span>
+                    </div>
+                    <div class="card status-card">
+                        <span class="title">Attempt Summary</span>
+                        <div class="bar-chart-summary">
+                            <div class="summary-stat correct"><span class="lbl">Correct:</span> <span id="stat-correct">0</span></div>
+                            <div class="summary-stat incorrect"><span class="lbl">Incorrect:</span> <span id="stat-incorrect">0</span></div>
+                            <div class="summary-stat skipped"><span class="lbl">Skipped:</span> <span id="stat-skipped">0</span></div>
+                        </div>
+                    </div>
+                    <div class="card accuracy-card">
+                        <span class="title">Accuracy %</span>
+                        <div id="stat-accuracy" class="value">0%</div>
+                        <span class="subtitle">Correct vs Attempted</span>
+                    </div>
+                </div>
+
+                <!-- Subject Breakdown Table -->
+                <div class="results-table-container">
+                    <h3>Subject Wise Breakdown</h3>
+                    <table class="results-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Correct</th>
+                                <th>Incorrect</th>
+                                <th>Skipped</th>
+                                <th>Max Marks</th>
+                                <th>Scored Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="scorecard-subject-body">
+                            <!-- Generated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="scorecard-actions">
+                    <button id="btn-scorecard-back" class="btn btn-primary btn-lg">Back to Dashboard</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Fullscreen Modal / Loader -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loader-box">
+            <div class="spinner"></div>
+            <p id="loading-message">Converting PDF. Please wait...</p>
+        </div>
+    </div>
+
+    <!-- Core App Logic Scripts -->
+    <script src="js/app.js?v=7"></script>
+    <script src="js/exam.js?v=7"></script>
+    <script src="js/parser.js?v=7"></script>
+    <script src="js/analytics.js?v=7"></script>
+</body>
+</html>
